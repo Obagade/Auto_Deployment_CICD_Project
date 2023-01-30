@@ -1,0 +1,32 @@
+---
+- name: "Creates backend app directory"
+  file:
+    path: ~/backend-app
+    state: directory
+- name: "Unarchive backend files"
+  unarchive:
+    src: artifact.tar.gz
+    dest: ~/backend-app
+- name: "Installing Node Dependencies"
+  shell: |
+    cd ~/backend-app
+    npm i
+- name: "Executing Node app with PM2"
+  shell: |
+    cd ~/backend-app/dist
+    cd ../
+    npm install
+    npm install
+    pm2 stop all
+    pm2 start npm --name "udapeople-app-backend" -- run start
+- name: "Set pm2 start as service"
+  become: yes
+  shell: |
+    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+
+- name: check pm2 status
+  become: yes
+  shell: |
+    pm2 describe "udapeople-app-backend"
+  register: command_output_npm
+- debug: var=command_output_npm.stdout_lines
