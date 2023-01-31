@@ -451,7 +451,7 @@ jobs:
       - revert-migrations
 
 
-cleanup:
+  cleanup:
     docker:
       # Docker image here
       - install_awscli
